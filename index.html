@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASSWORD GENERATOR</title>
+    <link rel="stylesheet" href="style.css">
+<!-- ADDING GOOGLE FONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100;200;300;400;600&display=swap"
+      rel="stylesheet"
+    />
+<style>
+/* Adding the required custom color to CSS root directory which is needed for slider thumb. */
+:root{
+    --vb-yellow: hsl(52, 100%, 62%);
+    --dk-violet: hsl(268, 75%, 9%);
+    --lt-violet: hsl(268, 47%, 21%);
+    --lt-violet2: hsl(281, 89%, 26%);
+}
+    /* Accessing the Pseudo Element Selector 'webkit-slider-thumb' that selects the dragable part of 'slider' or range input element's dot. */
+.slider::-webkit-slider-thumb{
+/*Setting position relative to cancel out the overlap of outline of slider on slider thumb when selected.  */
+ position: relative;
+ appearance: none;
+ height: 1.4rem;
+ width: 1.4rem;
+ border-radius: 50%;
+ background-color:var(--vb-yellow);
+ cursor: pointer;
+ margin-top: -3px;
+ box-shadow: 0px 0px 20px 0px rgba(255,229,61,0.50);
+ transition: all 100ms ease-in;
+ z-index: 1;
+}
+/* FOR FIREFOX */
+.slider::-moz-range-thumb{
+    position: relative;
+ appearance: none;
+ height: 1.4rem;
+ width: 1.4rem;
+ border-radius: 50%;
+ background-color:var(--vb-yellow);
+ cursor: pointer;
+ margin-top: -3px;
+ box-shadow: 0px 0px 20px 0px rgba(255,229,61,0.50);
+ transition: all 100ms ease-in;
+ z-index: 1;
+
+}
+/* slider-thumb on hover */
+.slider::-webkit-slider-thumb:hover{
+    outline: 1.6px solid var(--vb-yellow);
+    background-color: var(--dk-violet);
+    box-shadow: 0px 0px 25px 4px rgba(255,229,61,0.80);
+}
+/* FOR FIREFOX */
+.slider::-moz-range-thumb:hover {
+    outline: 2px solid var(--vb-yellow);
+    background-color: var(--dk-violet);
+    box-shadow: 0px 0px 25px 5px rgba(255, 229, 61, 0.80);
+  } 
+  /* */
+  .tooltip{
+    opacity:0;
+    transform: scale(0);
+    transform-origin: bottom;
+    transition:transform 300ms ease-in-out;
+  }
+/* Active class for span */
+.tooltip.active{
+    opacity: 1;
+     transform:scale(1);  
+}
+</style>
+
+</head>
+<body>
+<div class="wrapper w-[100vw] h-[100vh] flex  flex-col justify-center items-center bg-gradiento font-spartan">
+   <!--Creating Container div  -->
+<div class="container max-w-[400px] w-[90%]">
+
+    <h1 class="uppercase text-pl-white opacity-75 tracking-[2px] text-center leading-[1.2]  font-extrabold text-[1.2rem]">Password Generator</h1>
+    <!-- Input-Type & Copy Button Div (Display Container Div) -->
+    <div class="display-container relative bg-dk-violet rounded-[1rem] border-b-0.35 border-b-lt-violet2 border-solid m-[1rem_0] pt-[0.35rem]">
+   <!-- Creating an input type which will hold and display generated passwords.Since this input field cannot be changed or altered,so setting it as 'read only'.Also using a custom attribute name 'passworDisplay' which will be used to access/fetch this input field using query selector in JS.Query selector in J.S not only fetches elements by class,id or tag name but by using it's custom attribute name as well. -->
+       <input readonly placeholder="Password" class="display  bg-transparent p-[0.7rem_1rem] text-vb-yellow font-[600] text-[1.5rem] leading-[30px] tracking-[1px] pr-[3.25rem] outline-none  w-[100%] placeholder:text-vb-yellow placeholder:uppercase placeholder:absolute placeholder:top-[50%] placeholder:left-[1.5rem] placeholder:text-[1.5rem] placeholder:leading-[30px] placeholder:-translate-y-[50%] placeholder:opacity-65" id="pswrd-kr-display" data-passworDisplay>
+   
+   <!-- Copy Button:-There are 2 things in this button,one is the icon and other is the text 'copied' which gets visible on click event  -->
+   <button pswrd-copy class="absolute top-[50%] right-[1.5rem] -translate-y-[50%]">
+       <!--pswrd-copyMsg is custom attribute given to span tag of button which will be used by query selector to fetch this element-->
+       <span pswrd-copyMsg class="tooltip absolute bg-vb-violet2 text-vb-yellow text-[1rem] -top-[39px] -left-[25px] p-[5px_10px] rounded-[1rem]"></span>
+   
+       <img src="assets/copy.svg" alt="copy-icon" width="23" height="23">
+   
+   </button>
+   
+    </div> <!--Display container div ends-->
+   
+    <!-- Creating INPUT CONTAINER DIV where in we set all details of the password required to be generated. -->
+    <div class="input-container w-[100%]  bg-dk-violet rounded-[1rem] p-[0.5rem_2rem] border-b-0.35 border-b-lt-violet2 border-solid">
+   
+   <!-- Top div for 'password length' string and number. -->
+   <div>
+   
+      <div class="length-container flex justify-between items-center">
+       <p class="text-pl-white text-[1.5rem]">Password Length</p>
+       <p pswrd-lengthNum class="text-vb-yellow text-[1.5rem]">0</p> <!--pswrd-lengthNum is custom attribute to be used by query selector in J.S-->
+      </div>
+   
+   </div> <!--pswrd length and number div ends-->
+   
+   
+   <!-- SLIDER CODE -->
+   <input type="range" min="1" max="20" class="slider appearance-none w-[100%] h-[0.75rem] cursor-pointer mt-5 mb-5 rounded-[1rem] bg-lt-violet bg-slider-gradient bg-no-repeat focus:outline-[2px] focus:outline focus:outline-vb-yellow " step="1" pswrd-lengthSlider id="rangeo">
+   <!-- The step attribute in HTML is used with <input> elements of type 'number' or 'datetime-local' or 'range' to specify the increment or decrement step for the value of the input. It determines how much the value should increase or decrease when the user interacts with the input, such as by using arrow keys, clicking the up and down buttons, or pressing and holding the arrow keys. 
+   
+   (*)'pswrd-lengthSlider' is custom attribute for Query Selector to be used in J.S.
+
+   N-O-T-E:-To access slider-thumb(dot of slider which moves),we need to use an pseudo-element-selector of CSS which is not supported in tailwind.So we accessed that above in head tag using style tag.
+
+   FOCUS state reprsents the click/selected state of element.'focus:outline' reprsents outline-style when element is selected
+   -->
+   
+   <!-- ***CREATING 4 CHECK-BOXES*** -->
+   
+   <!-- CheckBox-1 -->
+   <div class="flex items-center m-[0.8rem_0] gap-[0_1rem] ">
+       <input type="checkbox" name="checkbox" id="uppercase"  class="appearance-none w-[20px] h-[20px] border-[1px] border-solid border-vb-cyan cursor-pointer relative  rounded-[0.35rem] checked:bg-vb-cyan  checked:before:content-['\2713'] checked:before:absolute checked:before:text-dk-text checked:before:font-[600] checked:before:text-[1.2rem] checked:before:left-[16%] checked:before:-top-[2px]" checked > 
+    <!--'checked' attribute of element is used to keep a checkbox checked by default.-->
+
+       <!--'\2713' is Unicode for checkmark(tick) -->
+       
+    <!--'appearance-none' means do not implement the default browser styling
+
+    (*):relative position given so that when checked,a tick overlaps the checkbox-->
+
+       <label for="uppercase" class="text-pl-white text-[1.25rem] tracking-[0.75px]">Includes Uppercase Letters</label>
+   </div>
+   
+   <!-- CheckBox-2 -->
+   <div class="flex items-center m-[0.8rem_0] gap-[0_1rem] ">
+       <input type="checkbox" name="checkbox" id="lowercase" class="appearance-none w-[20px] h-[20px] border-[1px] border-solid border-vb-cyan cursor-pointer relative rounded-[0.35rem] checked:bg-vb-cyan checked:before:content-['\2713'] checked:before:absolute checked:before:text-dk-text checked:before:font-[600] checked:before:text-[1.2rem] checked:before:left-[16%] checked:before:-top-[2px]">
+
+       <label for="lowercase" class="text-pl-white text-[1.25rem] tracking-[0.75px]">Includes Lowercase Letters</label>
+   </div>
+   
+   <!-- CheckBox-3 -->
+   <div class="flex items-center m-[0.8rem_0] gap-[0_1rem] ">
+       <input type="checkbox" name="checkbox" id="numbers" class="appearance-none w-[20px] h-[20px] border-[1px] border-solid border-vb-cyan cursor-pointer relative rounded-[0.35rem] checked:bg-vb-cyan checked:before:content-['\2713'] checked:before:absolute checked:before:text-dk-text checked:before:font-[600] checked:before:text-[1.2rem] checked:before:left-[16%] checked:before:-top-[2px]">
+
+       <label for="numbers" class="text-pl-white text-[1.25rem] tracking-[0.75px]">Includes Numbers</label>
+   </div>
+   
+   <!-- CheckBox-4 -->
+   <div class="flex items-center m-[0.8rem_0] gap-[0_1rem] ">
+       <input type="checkbox" name="checkbox" id="symbols" class="appearance-none w-[20px] h-[20px] border-[1px] border-solid border-vb-cyan cursor-pointer relative rounded-[0.35rem] checked:bg-vb-cyan checked:before:content-['\2713'] checked:before:absolute checked:before:text-dk-text checked:before:font-[600] checked:before:text-[1.2rem] checked:before:left-[16%] checked:before:-top-[2px]">
+       
+       <label for="symbols" class="text-pl-white text-[1.25rem] tracking-[0.75px]">Includes Symbols</label>
+   </div>
+   
+   <!-- STRENGTH SECTION DIV -->
+   <div class="strength-container flex justify-between items-center mt-[1.75rem] mb-[2rem]">
+       <p class="text-pl-white text-[1.5rem]">Strength</p>
+       <div pswrd-indicator class="rounded-full h-[1.5rem] w-[1.5rem]"></div>
+   <!-- pswrd-indicator is a custom attribute using which it will be accessed by J.S -->
+   </div>
+   
+   <!-- GENERATE PASSWORD BUTTON -->
+   <button class="generateButton border-b-0.35 border-b-vb-yellow border-solid text-vb-yellow uppercase cursor-pointer w-[100%] p-[0.6rem_0] bg-vb-violet text-center rounded-[0.75rem] tracking-[1px] font-[600] text-[1.25rem]">Generate Password</button>
+   
+   
+   
+    </div> <!--INPUT CONTAINER DIV ENDS-->
+   
+   
+   
+   </div> <!--Container Div Ends-->
+   
+
+
+</div>
+
+
+<script src="script.js"></script>
+</body>
+</html>
